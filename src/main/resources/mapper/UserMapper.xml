@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.au.dao.UserMapper">
+
+    <resultMap id="User" type="com.au.model.DO.UserDO">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="del" property="del" jdbcType="INTEGER"/>
+        <collection property="roles" resultMap="Role"></collection>
+    </resultMap>
+
+    <resultMap id="Role" type="com.au.model.DO.RoleDO">
+        <id column="rid" property="id" jdbcType="INTEGER"/>
+        <result column="rname" property="name" jdbcType="VARCHAR"/>
+        <result column="rdesc" property="desc" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="createUser" parameterType="com.au.model.DO.UserDO">
+        <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user(username, password, sex, phone, del)
+        values(#{username}, #{password}, #{sex}, #{phone}, 0)
+    </insert>
+
+    <select id="getUserById" parameterType="Integer" resultMap="User">
+        select u.*, r.name rname, r.desc rdesc
+        from user u left outer join user_role_ref ur on (u.id = ur.user_id and ur.del = 0)
+                     left outer join role r on (ur.role_id = r.id and r.del = 0)
+        where u.id = #{id} and u.del = 0
+    </select>
+
+    <select id="getUserByUsername" parameterType="String" resultMap="User">
+        select u.*, r.name rname, r.desc rdesc
+        from user u left outer join user_role_ref ur on (u.id = ur.user_id and ur.del = 0)
+                     left outer join role r on (ur.role_id = r.id and r.del = 0)
+        where u.username = #{username} and u.del = 0
+    </select>
+
+    <select id="getUserByPhone" parameterType="String" resultMap="User">
+        select u.*, r.name rname, r.desc rdesc
+        from user u left outer join user_role_ref ur on (u.id = ur.user_id and ur.del = 0)
+                     left outer join role r on (ur.role_id = r.id and r.del = 0)
+        where u.phone = #{phone} and u.del = 0
+    </select>
+
+</mapper>

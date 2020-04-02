@@ -1,0 +1,48 @@
+server:
+  port: 8888
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.au.model
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&serverTimezone=CTT
+    username: root
+    password: 123456789
+    minIdle: 5
+    # useGlobalDataSourceStat: true
+    validationQuery: SELECT 'x'
+    initialSize: 5
+    maxWait: 60000
+    filters: wall,stat,slf4j
+    poolPreparedStatements: true
+    type: com.alibaba.druid.pool.DruidDataSource
+    maxPoolPreparedStatementPerConnectionSize: 20
+    testOnBorrow: false
+    testWhileIdle: true
+    minEvictableIdleTimeMillis: 300000
+    timeBetweenEvictionRunsMillis: 60000
+    timeBetweenLogStatsMillis: 300000
+    testOnReturn: false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    maxActive: 20
+  redis:
+    host: localhost
+    port: 6379
+    #连接超时时间（毫秒）
+    timeout: 5000
+    #密码默认空
+    password:
+    #Redis数据库索引（默认为0）
+    database: 0
+    jedis:
+      pool:
+        #连接池最大连接数（使用负值表示没有限制）
+        max-active: 50
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 3000
+        #连接池中的最大空闲连接
+        max-idle: 20
+        #连接池中的最小空闲连接
+        min-idle: 2
